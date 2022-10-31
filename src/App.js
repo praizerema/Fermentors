@@ -1,5 +1,4 @@
 import React, { Suspense, lazy } from "react";
-import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import {LoadingCustom} from "./components"
 import {ErrorBoundary} from 'react-error-boundary'

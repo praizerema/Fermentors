@@ -1,4 +1,5 @@
-export const FermntorData = [
+// Fermentor list with url 
+export const FermentorData = [
   {
     fermentor: "AA0C-8AD7B319D4A4L",
     url: "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/af8f15ba-9858-4d94-b3ae-0417430e57b9/AA0C-8AD7B319D4A4L.json?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221030%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221030T102018Z&X-Amz-Expires=86400&X-Amz-Signature=ead348a7cdf02523628a4b89ce918023271c0773fac47cb3cba9841441c1560a&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22AA0C-8AD7B319D4A4L.json%22&x-id=GetObject",

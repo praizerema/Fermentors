@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import ColorifixLogo from "../../assets/images/colorifix-icon.svg";
 
 export function NavBar() {
-  const [showMobileNav, setShowMobileNav] = useState(false);
   return (
     <div className="px-6 md:px-12 lg:px-12 2xl:px-12 py-2 mb-16 bg-gray-50 border-solid border-t-2 border-b-2 border-gray-100 w-full fixed top-0 left-0 z-10">
       <div className="flex justify-between content-center items-center">

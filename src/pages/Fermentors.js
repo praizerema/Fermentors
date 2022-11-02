@@ -68,20 +68,23 @@ const Fermentors = () => {
       fermentorEvents?.map((fermentorEvent) => {
         if (fermentorEvent.event_type === "MeasurePh") {
           phArr.push({
-            time: fermentorEvent?.timestamp,
+            // time: new Date(fermentorEvent?.timestamp),
+            time: new Date(fermentorEvent?.timestamp).getUTCSeconds(),
             value: fermentorEvent?.event_properties[0].value,
           });
         }
         if (fermentorEvent.event_type === "MeasureTemperature") {
           tempArr.push({
-            time: fermentorEvent?.timestamp,
+            // time: new Date(fermentorEvent?.timestamp),
+            time: new Date(fermentorEvent?.timestamp).getUTCSeconds(),
             value: fermentorEvent?.event_properties[0].value,
           });
         }
 
         if (fermentorEvent.event_type === "MeasureDO") {
           doArr.push({
-            time: fermentorEvent?.timestamp,
+            // time: new Date(fermentorEvent?.timestamp),
+            time: new Date(fermentorEvent?.timestamp).getUTCSeconds(),
             value: fermentorEvent?.event_properties[0].value,
           });
         }

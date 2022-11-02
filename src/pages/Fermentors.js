@@ -140,11 +140,12 @@ const Fermentors = () => {
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis
                           dataKey="time"
-                          domain={["auto", "auto"]}
+                          domain={["dataMin", "auto"]}
                           name="Time"
                           tickFormatter={(unixTime) =>
                             moment(unixTime).format("HH:mm:ss Do")
                           }
+                          tickCount={22}
                           type="number"
                         >
                           <Label
@@ -166,13 +167,11 @@ const Fermentors = () => {
                         </YAxis>
                         <Tooltip
                           labelFormatter={function (value) {
-                            return `Time: ${moment(value).format(
-                              "HH:mm:ss Do"
-                            )}`;
+                            return `Time: ${new Date (value)}`;
                           }}
                         />
 
-                        <Legend layout="horizontal" align="center" />
+                        <Legend layout="horizontal" align="right" />
                         {timeSeries?.map((s) => (
                           <Line
                             dataKey="value"
@@ -180,8 +179,8 @@ const Fermentors = () => {
                             name={s.name}
                             key={s.name}
                             stroke={s.color}
-                            dot={false}
-                            strokeWidth="3px"
+                            strokeWidth="2.5px"
+                            type="monotoneX"
                           />
                         ))}
                       </LineChart>

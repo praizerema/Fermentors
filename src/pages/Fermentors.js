@@ -15,10 +15,9 @@ import {
   Label,
   ResponsiveContainer,
 } from "recharts";
-
+import moment from "moment";
 const Fermentors = () => {
   const [currentCount, setCurrentCount] = useState(0);
-  const [currentFermentor, setCurrentFermentor] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [fermentorEvents, setFermentorEvents] = useState(null);
   const [hasError, setHasError] = useState(false);
@@ -28,15 +27,14 @@ const Fermentors = () => {
   const [fermentationStatus, setFermentationStatus] = useState(false);
 
   let api = useApi();
-// Handle Fermentor click
+  // Handle Fermentor click
   const handleLoadEvent = (item, count) => {
     let url = item.url;
     setCurrentCount(count);
-    setCurrentFermentor(item.fermentor);
     //Fetch fermentor event
     const fetchEvent = async (url) => {
       setIsLoading(true);
-      setHasError(false)
+      setHasError(false);
       let results = null;
       results = await api.getFermentorEvents(url);
       if (results.success) {
@@ -55,7 +53,7 @@ const Fermentors = () => {
   useEffect(() => {
     handleLoadEvent(FermentorData[0], 1);
   }, []);
-//   Structure graph data and get last events for a running fermentor
+  //   Structure graph data and get last events for a running fermentor
   useEffect(() => {
     if (fermentorEvents !== null) {
       let phArr = [];
@@ -68,23 +66,20 @@ const Fermentors = () => {
       fermentorEvents?.map((fermentorEvent) => {
         if (fermentorEvent.event_type === "MeasurePh") {
           phArr.push({
-            // time: new Date(fermentorEvent?.timestamp),
-            time: new Date(fermentorEvent?.timestamp).getUTCSeconds(),
+            time: fermentorEvent?.timestamp,
             value: fermentorEvent?.event_properties[0].value,
           });
         }
         if (fermentorEvent.event_type === "MeasureTemperature") {
           tempArr.push({
-            // time: new Date(fermentorEvent?.timestamp),
-            time: new Date(fermentorEvent?.timestamp).getUTCSeconds(),
+            time: fermentorEvent?.timestamp,
             value: fermentorEvent?.event_properties[0].value,
           });
         }
 
         if (fermentorEvent.event_type === "MeasureDO") {
           doArr.push({
-            // time: new Date(fermentorEvent?.timestamp),
-            time: new Date(fermentorEvent?.timestamp).getUTCSeconds(),
+            time: fermentorEvent?.timestamp,
             value: fermentorEvent?.event_properties[0].value,
           });
         }
@@ -96,9 +91,9 @@ const Fermentors = () => {
         }
       });
       fermentorSeries = [
-        { name: "Temperature", color: "#FF1100", data: tempArr },
-        { name: "Disolved Oxygen", color: "#0C6C01", data: doArr },
-        { name: "pH", color: "#103387", data: phArr },
+        { name: "Temperature", color: "#f2286c", data: tempArr },
+        { name: "Dissolved Oxygen", color: "#24cc8b", data: doArr },
+        { name: "pH", color: "#ffa816", data: phArr },
       ];
       setTimeSeries(fermentorSeries);
       let startPlusEnd = startRunArr.length + endRunArr.length;
@@ -124,39 +119,60 @@ const Fermentors = () => {
             {/* Is loading view */}
             {isLoading && (
               <>
-                <div className="text-4xl text-center py-32 text-gray-700">Loading...</div>
+                <div className="text-4xl text-center py-32 text-gray-700">
+                  Loading...
+                </div>
               </>
             )}
             {/* Success Event view */}
             {!hasError && !isLoading ? (
               <div className="grid md:grid-cols-4 gap-4">
-                <div className="lg:col-span-3 col-span-4 md:px-6 py-6" >
-                  <h1 className="text-4xl font-bold text-center text-gray-700">
-                    Fermentor {currentFermentor}
+                <div className="lg:col-span-3 col-span-4 md:px-6 py-6">
+                  <h1 className="text-3xl font-bold text-center text-gray-700">
+                    Fermentor {currentCount}
                   </h1>
 
                   <div className="w-full h-[400px] mt-6">
                     <ResponsiveContainer>
                       <LineChart
-                        // width={730}
-                        // height={450}
                         margin={{ top: 5, right: 30, left: 5, bottom: 5 }}
                       >
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis
                           dataKey="time"
+                          domain={["auto", "auto"]}
+                          name="Time"
+                          tickFormatter={(unixTime) =>
+                            moment(unixTime).format("HH:mm:ss Do")
+                          }
                           type="number"
-                          domain={["dataMin", "dataMax"]}
+                        >
+                          <Label
+                            value={"Time"}
+                            position="insideBottom"
+                            offset={-6}
+                            style={{ textAnchor: "middle" }}
+                          />
+                        </XAxis>
+
+                        <YAxis>
+                          <Label
+                            value={"Value"}
+                            position="insideLeft"
+                            offset={25}
+                            angle={-90}
+                            style={{ textAnchor: "middle" }}
+                          />
+                        </YAxis>
+                        <Tooltip
+                          labelFormatter={function (value) {
+                            return `Time: ${moment(value).format(
+                              "HH:mm:ss Do"
+                            )}`;
+                          }}
                         />
 
-                        <Label
-                          value={"Time"}
-                          position="bottom"
-                          style={{ textAnchor: "middle" }}
-                        />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
+                        <Legend layout="horizontal" align="center" />
                         {timeSeries?.map((s) => (
                           <Line
                             dataKey="value"
@@ -164,6 +180,8 @@ const Fermentors = () => {
                             name={s.name}
                             key={s.name}
                             stroke={s.color}
+                            dot={false}
+                            strokeWidth="3px"
                           />
                         ))}
                       </LineChart>
@@ -173,20 +191,31 @@ const Fermentors = () => {
                 <div className="lg:col-span-1 col-span-4 md:py-16 py-3 text-lg px-5 space-y-2">
                   <div>
                     <span>Status: </span>
-                    <span className={`${fermentationStatus? "text-red-700" : "text-green-700"} font-bold`}>{fermentationStatus ? "Running" : "Ended"}</span>
+                    <span
+                      className={`${
+                        fermentationStatus ? "text-red-700" : "text-green-700"
+                      } font-bold`}
+                    >
+                      {fermentationStatus ? "Running" : "Ended"}
+                    </span>
                   </div>
                   {fermentationStatus && (
                     <>
-                      <div className="text-[#FF1100]">
+                      <div className="text-[#f2286c]">
                         <span>Temperature: </span>
-                        <span className="font-bold">{lastEvents.temperature}</span>
+                        <span className="font-bold">
+                          {lastEvents.temperature}
+                        </span>
                       </div>
-                      <div className="text-[#0C6C01]">
+                      <div className="text-[#24cc8b]">
                         <span>Dissolved Oxygen: </span>
-                        <span className="font-bold">{lastEvents.dissolved_oxygen}</span>
+                        <span className="font-bold">
+                          {lastEvents.dissolved_oxygen}
+                        </span>
                       </div>
-                      <div className="text-[#103387]">
-                        <span>pH: </span> <span className="font-bold">{lastEvents.pH}</span>
+                      <div className="text-[#ffa816]">
+                        <span>pH: </span>{" "}
+                        <span className="font-bold">{lastEvents.pH}</span>
                       </div>
                     </>
                   )}
@@ -198,7 +227,9 @@ const Fermentors = () => {
             {/* hasError view */}
             {hasError && !isLoading ? (
               <>
-                <div className="text-4xl text-center py-32 text-red-800">{errorMessage}</div>
+                <div className="text-4xl text-center py-32 text-red-800">
+                  {errorMessage}
+                </div>
               </>
             ) : (
               <></>

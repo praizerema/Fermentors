@@ -36,8 +36,8 @@ const Fermentors = () => {
     setCurrentFermentor(item.fermentor);
     const postEvent = async (url) => {
       setIsLoading(true);
+      setHasError(false)
       let results = null;
-
       results = await api.getFermentorEvents(url);
       if (results.success) {
         let { data } = results;
@@ -116,7 +116,7 @@ const Fermentors = () => {
       <>
         <div className="lg:px-20 px-5 h-screen pt-20">
           {/* Fermentor graphical represnentation */}
-          <div className="h-[70%] w-full bg-gray-100 p-6">
+          <div className="h-[75%] w-full bg-gray-100 overflow-y-scroll">
             {/* Is loading view */}
             {isLoading && (
               <>
@@ -125,8 +125,8 @@ const Fermentors = () => {
             )}
             {/* Successful view */}
             {!hasError && !isLoading ? (
-              <div className="grid grid-cols-4">
-                <div className="col-span-3">
+              <div className="grid md:grid-cols-4 gap-4">
+                <div className="lg:col-span-3 col-span-4 md:px-6 py-6" >
                   <h1 className="text-4xl font-bold text-center text-gray-700">
                     Fermentor {currentFermentor}
                   </h1>
@@ -134,9 +134,9 @@ const Fermentors = () => {
                   <div className="w-full h-[400px] mt-6">
                     <ResponsiveContainer>
                       <LineChart
-                        width={730}
-                        height={450}
-                        margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
+                        // width={730}
+                        // height={450}
+                        margin={{ top: 5, right: 30, left: 5, bottom: 5 }}
                       >
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis
@@ -166,23 +166,23 @@ const Fermentors = () => {
                     </ResponsiveContainer>
                   </div>
                 </div>
-                <div className="col-span-1 py-16">
+                <div className="lg:col-span-1 col-span-4 md:py-16 py-3 text-lg px-5 space-y-2">
                   <div>
-                    <span>Status</span>
-                    <span className="text-[#ff002]">{fermentationStatus ? "Running" : "Stopped"}</span>
+                    <span>Status: </span>
+                    <span className={`${fermentationStatus? "text-red-700" : "text-green-700"} font-bold`}>{fermentationStatus ? "Running" : "Ended"}</span>
                   </div>
                   {fermentationStatus && (
                     <>
                       <div className="text-[#FF1100]">
-                        <span>Temperature</span>
-                        <span>{lastEvents.temperature}</span>
+                        <span>Temperature: </span>
+                        <span className="font-bold">{lastEvents.temperature}</span>
                       </div>
                       <div className="text-[#0C6C01]">
-                        <span>Dissolved Oxygen</span>
-                        <span>{lastEvents.dissolved_oxygen}</span>
+                        <span>Dissolved Oxygen: </span>
+                        <span className="font-bold">{lastEvents.dissolved_oxygen}</span>
                       </div>
                       <div className="text-[#103387]">
-                        <span>pH</span> <span>{lastEvents.pH}</span>
+                        <span>pH: </span> <span className="font-bold">{lastEvents.pH}</span>
                       </div>
                     </>
                   )}
@@ -201,19 +201,19 @@ const Fermentors = () => {
             )}
           </div>
           {/* Fermentor list */}
-          <div className="w-full h-[20%] mt-5 overflow-scroll">
-            <div className=" inline-flex h-full space-x-4">
+          <div className="w-full h-[20%] mt-5 overflow-x-scroll overflow-y-hidden">
+            <div className=" inline-flex  space-x-4">
               {FermentorData?.map((item, index) => (
                 <div
                   onClick={() => handleLoadEvent(item, index + 1)}
                   key={index}
-                  className={` w-[250px] border-r border-gray-100 text-gray-600 cursor-pointer bg-blue-100 rounded-md duration-300 ease-in-out delay-150 transition-all ${
+                  className={` w-[250px] py-10 border-r border-gray-100 text-gray-600 cursor-pointer bg-blue-100 rounded-md duration-300 ease-in-out delay-150 transition-all ${
                     currentCount === index + 1
                       ? "translate-y-1 scale-20 bg-blue-400 text-white"
                       : ""
                   }`}
                 >
-                  <div className="text-center py-6">Fermentor {index + 1}</div>
+                  <div className="text-center pb-6">Fermentor {index + 1}</div>
                   <div className="text-center ">{item.fermentor}</div>
                 </div>
               ))}

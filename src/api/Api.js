@@ -1,12 +1,12 @@
 import axios from "axios";
 
-// const headers = {
-//   "Content-Type": "application/json",
-// };
+const headers = {
+  "Content-Type": "application/json",
+};
 
 const instance = axios.create({
-  timeout: 500000,
-//   headers,
+    timeout: 500000,
+  headers,
 });
 
 instance.interceptors.response.use(
@@ -61,7 +61,7 @@ instance.interceptors.response.use(
 function processResult(response) {
   let { status } = response;
   if (response.status) {
-    if (status === 200) {
+    if (status === 200 || status === 304) {
       return {
         success: true,
         data: response.data,

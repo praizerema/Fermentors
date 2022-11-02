@@ -1,17 +1,17 @@
 import axios from "axios";
 
-const headers = {
-  "Content-Type": "application/json",
-};
+// const headers = {
+//   "Content-Type": "application/json",
+// };
 
 const instance = axios.create({
   timeout: 500000,
-  headers,
+//   headers,
 });
 
 instance.interceptors.response.use(
   function (response) {
-    response = { ...response, status: 200, statusCode: 200 };
+    response = { ...response, status: 200 };
     return response;
   },
   function (error) {
@@ -23,13 +23,13 @@ instance.interceptors.response.use(
           error: error.response.data.error
             ? error.response.data.error
             : error.response.data,
-          statusCode: 422,
+          status: 422,
         };
       }
       if (status === 404) {
         return {
           success: error.response.data.success,
-          statusCode: 404,
+          status: 404,
           message: error.response.data.message,
           data: error.response.data.data,
         };
@@ -37,7 +37,7 @@ instance.interceptors.response.use(
       if (status === 400) {
         return {
           success: error.response.data.success,
-          statusCode: 400,
+          status: 400,
           message: error.response.data.message,
           data: error.response.data.data,
         };
@@ -45,7 +45,7 @@ instance.interceptors.response.use(
       if (status === 403) {
         return {
           success: error.response.data.success,
-          statusCode: 403,
+          status: 403,
           message: error.response.data.message,
           data: error.response.data.data,
         };
@@ -54,31 +54,31 @@ instance.interceptors.response.use(
 
     // let customError = Promise.reject(error)
     return { error };
-    // return { error: 'Unable to connect to the internet', statusCode: 500 }
+    // return { error: 'Unable to connect to the internet', status: 500 }
   }
 );
 // Process response from api
 function processResult(response) {
-  let { statusCode } = response;
-  if (response.statusCode) {
-    if (statusCode === 200) {
+  let { status } = response;
+  if (response.status) {
+    if (status === 200) {
       return {
-        success: response.data.success,
-        data: response.data.data,
-        message: response.data.message,
+        success: true,
+        data: response.data,
+        message: "Successful",
       };
-    } else if (statusCode === 500) {
+    } else if (status === 500) {
       return { success: false, message: "Cannot connect to the internet" };
-    } else if (statusCode === 404) {
+    } else if (status === 404) {
       return response;
-    } else if (statusCode === 400) {
+    } else if (status === 400) {
       return response;
     }
-    return { success: response.data?.status, message: response.data?.message };
+    return { success: false, message: "Something went wrong. Try again." };
   } else {
     return {
       message:
-        "Oops, failed to load response. Please check your internet connection and try again.",
+        "Failed to load response. Please check your internet connection and try again.",
       success: false,
     };
   }

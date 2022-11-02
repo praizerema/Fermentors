@@ -11,14 +11,14 @@ function ErrorHandler({error}) {
   )
 }
 function App() {
-  const LandingPage = lazy(() => import("./pages/Fermentors"));
+  const Dashboard = lazy(() => import("./pages/Fermentors"));
   return (
     <ErrorBoundary FallbackComponent={ErrorHandler}>
 
   <Suspense fallback={ <LoadingCustom/>}>
     <BrowserRouter>
     <Routes>
-       <Route path="/" element={<LandingPage />} />
+       <Route path="/" element={<Dashboard />} />
   </Routes>
   
   </BrowserRouter></Suspense>

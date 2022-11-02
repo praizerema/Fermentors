@@ -25,16 +25,16 @@ const Fermentors = () => {
   const [timeSeries, setTimeSeries] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [lastEvents, setLastEvents] = useState({});
-
   const [fermentationStatus, setFermentationStatus] = useState(false);
 
   let api = useApi();
-
+// Handle Fermentor click
   const handleLoadEvent = (item, count) => {
     let url = item.url;
     setCurrentCount(count);
     setCurrentFermentor(item.fermentor);
-    const postEvent = async (url) => {
+    //Fetch fermentor event
+    const fetchEvent = async (url) => {
       setIsLoading(true);
       setHasError(false)
       let results = null;
@@ -49,12 +49,13 @@ const Fermentors = () => {
       }
       setIsLoading(false);
     };
-    postEvent(url);
+    fetchEvent(url);
   };
   //   Load fermentor one by default
   useEffect(() => {
     handleLoadEvent(FermentorData[0], 1);
   }, []);
+//   Structure graph data and get last events for a running fermentor
   useEffect(() => {
     if (fermentorEvents !== null) {
       let phArr = [];
@@ -115,7 +116,7 @@ const Fermentors = () => {
     <Layout>
       <>
         <div className="lg:px-20 px-5 h-screen pt-20">
-          {/* Fermentor graphical represnentation */}
+          {/* Fermentor graphical represnentation view*/}
           <div className="h-[75%] w-full bg-gray-100 overflow-y-scroll">
             {/* Is loading view */}
             {isLoading && (
@@ -123,7 +124,7 @@ const Fermentors = () => {
                 <div className="text-4xl text-center py-32 text-gray-700">Loading...</div>
               </>
             )}
-            {/* Successful view */}
+            {/* Success Event view */}
             {!hasError && !isLoading ? (
               <div className="grid md:grid-cols-4 gap-4">
                 <div className="lg:col-span-3 col-span-4 md:px-6 py-6" >

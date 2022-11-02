@@ -1,6 +1,8 @@
 # Fermentor Events
-
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Note
+I noticed that the fermentation events url has a 24 hours expiration. You may have to replace the url in the `Fermentor.js` component with a newly generated one before starting the app.
 
 ## Available Scripts
 
@@ -24,7 +26,7 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npyarnm run eject`
+### `yarn run eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can't go back!**
 

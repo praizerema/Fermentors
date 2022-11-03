@@ -2,7 +2,7 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Note
-I noticed that the fermentation events url has a 24 hours expiration. You may have to replace the url in the `Fermentor.js` component with a newly generated one before starting the app.
+I noticed that the fermentation events url are set to expire in 24 hours. Fresh urls are needed on FermentorData `components/data/FermentorData.js` before starting the app.
 
 ## Available Scripts
 
